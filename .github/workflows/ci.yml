@@ -1,0 +1,35 @@
+name: CI
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          pip install -r docker/requirements.txt
+          pip install flake8 pytest
+      - name: Lint
+        run: flake8 app/
+      - name: Tests
+        run: |
+          python - <<'PYEOF'
+          from app.api import Input, predict
+
+          alto = [58, "M", "ASY", 140, 289, 0, "Normal", 110, "Y", 2.0, "Flat"]
+          bajo = [35, "M", "ATA", 140, 289, 0, "Normal", 180, "N", 0.0, "Up"]
+          r_alto = predict(Input(features=alto))
+          r_bajo = predict(Input(features=bajo))
+
+          for r in (r_alto, r_bajo):
+              assert set(r) == {"heart_disease_probability", "prediction"}
+              assert 0.0 <= r["heart_disease_probability"] <= 1.0
+              assert r["prediction"] in (0, 1)
+          assert r_alto["prediction"] == 1 and r_bajo["prediction"] == 0
+          assert r_alto["heart_disease_probability"] > r_bajo["heart_disease_probability"]
+          print("Pruebas OK:", r_alto, r_bajo)
+          PYEOF
