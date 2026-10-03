@@ -1,0 +1,679 @@
+
+<!DOCTYPE html>
+
+
+<html lang="es" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Predicción de falla cardíaca con MLOps local &#8212; Heart Disease MLOps</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="_static/documentation_options.js?v=78d55cf8"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Haz clic para mostrar';</script>
+    <script>let toggleHintHide = 'Haz clic para ocultar';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script src="_static/translations.js?v=d190bf04"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="Etapa 0 · Estructura y ejecución" href="0_Estructura.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="es"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Saltar al contenido principal</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Volver arriba</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Advertencia de versión"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Navegación del sitio">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Búsqueda" aria-label="Búsqueda" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Búsqueda</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Búsqueda" aria-label="Búsqueda" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Búsqueda</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="En esta página">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Heart Disease MLOps - Home"/>
+    <img src="_static/logo.png" class="logo__image only-dark pst-js-only" alt="Heart Disease MLOps - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Búsqueda" aria-label="Búsqueda" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Búsqueda</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1 current active">
+                <a class="reference internal" href="#">
+                    Predicción de falla cardíaca con MLOps local
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Etapas del proyecto</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="0_Estructura.html">Etapa 0 · Estructura y ejecución</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/1_model_leakage_demo.html">Etapa 1 · Análisis exploratorio, preprocesamiento y detección de <em>data leakage</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/2_model_pipeline_cv.html">Etapa 2 · Modelado con validación segura</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_Despliegue_FastAPI_Docker.html">Etapa 3 · API con FastAPI y Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_Kubernetes.html">Etapa 4 · Despliegue en Kubernetes local</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5_Integracion_continua.html">Etapa 5 · Integración continua con GitHub Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6_Monitoreo_Evidently.html">Etapa 6 · Monitoreo con Evidently</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cierre</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="conclusiones.html">Conclusiones</a></li>
+<li class="toctree-l1"><a class="reference internal" href="referencias.html">Referencias</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/juandpolo22/heart-disease-mlops" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Repositorio de origen"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Descarga esta pagina">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/intro.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Descargar archivo fuente"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Imprimir en PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Modo de pantalla completa"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Tema" data-bs-title="Tema"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Claro"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Oscuro"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="Sistema"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Búsqueda" aria-label="Búsqueda" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Predicción de falla cardíaca con MLOps local</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contenido </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contexto-del-problema">Contexto del problema</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datos">Datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#etapas-del-proyecto">Etapas del proyecto</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados">Resultados</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="prediccion-de-falla-cardiaca-con-mlops-local">
+<h1>Predicción de falla cardíaca con MLOps local<a class="headerlink" href="#prediccion-de-falla-cardiaca-con-mlops-local" title="Link to this heading">#</a></h1>
+<p><strong>Proyecto Integrador de Aprendizaje Automático (sección 10.20)</strong></p>
+<p><strong>Autores:</strong> Juan Polo y Gabriela Pallares</p>
+<div class="tip admonition">
+<p class="admonition-title">Repositorio del proyecto</p>
+<p>Todo el código (API, Docker, Kubernetes, CI, notebooks y reporte de Evidently) está en GitHub:</p>
+<p><strong><a class="reference external" href="https://github.com/juandpolo22/heart-disease-mlops">github.com/juandpolo22/heart-disease-mlops</a></strong></p>
+<p>También se puede abrir desde el botón de repositorio de la barra superior de este libro.</p>
+</div>
+<section id="contexto-del-problema">
+<h2>Contexto del problema<a class="headerlink" href="#contexto-del-problema" title="Link to this heading">#</a></h2>
+<p>Las enfermedades cardiovasculares son la principal causa de muerte en el mundo <span class="bibtex-citation" id="id1">[<a class="reference internal" href="referencias.html#id2" title="World Health Organization. Cardiovascular diseases (cvds) – fact sheet. https://www.who.int/news-room/fact-sheets/detail/cardiovascular-diseases-(cvds), 2021.">World Health Organization, 2021</a>]</span>, y detectarlas a tiempo es fundamental para evitar complicaciones graves. Con la disponibilidad de datos clínicos estructurados es posible usar aprendizaje automático para estimar el riesgo de falla cardíaca.</p>
+<p>El proyecto construye, con scikit-learn <span class="bibtex-citation" id="id2">[<a class="reference internal" href="referencias.html#id4" title="Fabian Pedregosa, Gaël Varoquaux, Alexandre Gramfort, Vincent Michel, Bertrand Thirion, Olivier Grisel, Mathieu Blondel, Peter Prettenhofer, Ron Weiss, Vincent Dubourg, Jake Vanderplas, Alexandre Passos, David Cournapeau, Matthieu Brucher, Matthieu Perrot, and Édouard Duchesnay. Scikit-learn: machine learning in Python. Journal of Machine Learning Research, 12:2825–2830, 2011.">Pedregosa <em>et al.</em>, 2011</a>]</span>, un modelo de clasificación binaria que predice si un paciente está en riesgo de falla cardíaca (<code class="docutils literal notranslate"><span class="pre">HeartDisease</span> <span class="pre">=</span> <span class="pre">1</span></code>) o no (<code class="docutils literal notranslate"><span class="pre">HeartDisease</span> <span class="pre">=</span> <span class="pre">0</span></code>), y lo lleva a producción local con un flujo de MLOps <span class="bibtex-citation" id="id3">[<a class="reference internal" href="referencias.html#id10" title="D. Sculley, Gary Holt, Daniel Golovin, Eugene Davydov, Todd Phillips, Dietmar Ebner, Vinay Chaudhary, Michael Young, Jean-François Crespo, and Dan Dennison. Hidden technical debt in machine learning systems. In Advances in Neural Information Processing Systems 28, 2503–2511. 2015.">Sculley <em>et al.</em>, 2015</a>]</span>: FastAPI, Docker, Kubernetes (Minikube), GitHub Actions y Evidently. Todo se ejecuta en un equipo local, sin servicios en la nube.</p>
+</section>
+<section id="datos">
+<h2>Datos<a class="headerlink" href="#datos" title="Link to this heading">#</a></h2>
+<p>El dataset es <em>Heart Failure Prediction</em> <span class="bibtex-citation" id="id4">[<a class="reference internal" href="referencias.html#id3" title="fedesoriano. Heart failure prediction dataset. https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction, 2021.">fedesoriano, 2021</a>]</span> (Kaggle). El archivo <code class="docutils literal notranslate"><span class="pre">heart.csv</span></code> está incluido en la carpeta <code class="docutils literal notranslate"><span class="pre">notebooks/</span></code> del repositorio.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Característica</p></th>
+<th class="head"><p>Valor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Registros (pacientes)</p></td>
+<td><p>918</p></td>
+</tr>
+<tr class="row-odd"><td><p>Predictores</p></td>
+<td><p>11 (5 numéricos, 6 categóricos o binarios)</p></td>
+</tr>
+<tr class="row-even"><td><p>Variable objetivo</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">HeartDisease</span></code>: 508 con enfermedad (55.3 %) y 410 sin ella (44.7 %)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valores <code class="docutils literal notranslate"><span class="pre">NaN</span></code> explícitos</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>Faltantes ocultos</p></td>
+<td><p>172 registros con <code class="docutils literal notranslate"><span class="pre">Cholesterol</span> <span class="pre">=</span> <span class="pre">0</span></code> y 1 con <code class="docutils literal notranslate"><span class="pre">RestingBP</span> <span class="pre">=</span> <span class="pre">0</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Partición</p></td>
+<td><p>80 % entrenamiento (734) y 20 % prueba (184), estratificada</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="etapas-del-proyecto">
+<h2>Etapas del proyecto<a class="headerlink" href="#etapas-del-proyecto" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Etapa</p></th>
+<th class="head"><p>Descripción</p></th>
+<th class="head"><p>Capítulo</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0. Estructura</p></td>
+<td><p>Organización de carpetas y cómo ejecutar el proyecto</p></td>
+<td><p><a class="reference internal" href="0_Estructura.html"><span class="doc">Etapa 0 · Estructura y ejecución</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>1. Fuga de datos y comparación de modelos</p></td>
+<td><p>Demostración de <em>data leakage</em>, <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> + <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> y ranking de cuatro clasificadores</p></td>
+<td><p><a class="reference internal" href="notebooks/1_model_leakage_demo.html"><span class="doc">Etapa 1 · Análisis exploratorio, preprocesamiento y detección de data leakage</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>2. Modelado con validación segura</p></td>
+<td><p>Partición antes del escalado, matriz de confusión, curva ROC, AUC y exportación del modelo</p></td>
+<td><p><a class="reference internal" href="notebooks/2_model_pipeline_cv.html"><span class="doc">Etapa 2 · Modelado con validación segura</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>3. API y Docker</p></td>
+<td><p>Servir el modelo con FastAPI y contenerizarlo</p></td>
+<td><p><a class="reference internal" href="3_Despliegue_FastAPI_Docker.html"><span class="doc">Etapa 3 · API con FastAPI y Docker</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>4. Kubernetes local</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Deployment</span></code> y <code class="docutils literal notranslate"><span class="pre">Service</span></code> en Minikube</p></td>
+<td><p><a class="reference internal" href="4_Kubernetes.html"><span class="doc">Etapa 4 · Despliegue en Kubernetes local</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>5. Integración continua</p></td>
+<td><p>GitHub Actions: lint y prueba de la API en cada <code class="docutils literal notranslate"><span class="pre">push</span></code></p></td>
+<td><p><a class="reference internal" href="5_Integracion_continua.html"><span class="doc">Etapa 5 · Integración continua con GitHub Actions</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>6. Monitoreo</p></td>
+<td><p>Reporte de deriva de datos con Evidently</p></td>
+<td><p><a class="reference internal" href="6_Monitoreo_Evidently.html"><span class="doc">Etapa 6 · Monitoreo con Evidently</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="resultados">
+<h2>Resultados<a class="headerlink" href="#resultados" title="Link to this heading">#</a></h2>
+<p>Se comparan cuatro clasificadores (<code class="docutils literal notranslate"><span class="pre">LogisticRegression</span></code>, <code class="docutils literal notranslate"><span class="pre">RandomForestClassifier</span></code>, <code class="docutils literal notranslate"><span class="pre">KNeighborsClassifier</span></code> y <code class="docutils literal notranslate"><span class="pre">GradientBoostingClassifier</span></code>), cada uno dentro de un <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> optimizado con <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> y <code class="docutils literal notranslate"><span class="pre">StratifiedKFold</span></code> de 5 pliegues. El modelo se elige por el AUC de validación cruzada, usando solo el conjunto de entrenamiento.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>#</p></th>
+<th class="head"><p>Modelo</p></th>
+<th class="head"><p>AUC CV</p></th>
+<th class="head"><p>Accuracy CV</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>RandomForest</p></td>
+<td><p>0.9316 ± 0.0264</p></td>
+<td><p>0.8529 ± 0.0431</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>GradientBoosting</p></td>
+<td><p>0.9269 ± 0.0305</p></td>
+<td><p>0.8570 ± 0.0285</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>LogisticRegression</p></td>
+<td><p>0.9227 ± 0.0350</p></td>
+<td><p>0.8515 ± 0.0311</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>KNN</p></td>
+<td><p>0.9169 ± 0.0393</p></td>
+<td><p>0.8529 ± 0.0293</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>El modelo final es un Random Forest <span class="bibtex-citation" id="id5">[<a class="reference internal" href="referencias.html#id7" title="Leo Breiman. Random forests. Machine Learning, 45(1):5–32, 2001.">Breiman, 2001</a>]</span> (<code class="docutils literal notranslate"><span class="pre">max_depth=8</span></code>, <code class="docutils literal notranslate"><span class="pre">min_samples_leaf=5</span></code>, <code class="docutils literal notranslate"><span class="pre">n_estimators=200</span></code>). En el conjunto de prueba obtiene:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Métrica</p></th>
+<th class="head"><p>Valor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>AUC</p></td>
+<td><p>0.9247</p></td>
+</tr>
+<tr class="row-odd"><td><p>Accuracy</p></td>
+<td><p>0.8533</p></td>
+</tr>
+<tr class="row-even"><td><p>Sensibilidad</p></td>
+<td><p>0.882</p></td>
+</tr>
+<tr class="row-odd"><td><p>Especificidad</p></td>
+<td><p>0.817</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>En la demostración de fuga de datos (con un SVC, como pide el enunciado), el AUC es 1.000 cuando se filtra la variable <code class="docutils literal notranslate"><span class="pre">leaky_feature</span></code> y 0.918 con el flujo correcto.</p>
+</section>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="0_Estructura.html"
+       title="siguiente página">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">siguiente</p>
+        <p class="prev-next-title">Etapa 0 · Estructura y ejecución</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contenido
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contexto-del-problema">Contexto del problema</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datos">Datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#etapas-del-proyecto">Etapas del proyecto</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados">Resultados</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+Por Juan Polo y Gabriela Pallares
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <p>Autores: Juan Polo y Gabriela Pallares · Proyecto Integrador de Aprendizaje Automático</p>
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
